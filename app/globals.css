@@ -1,0 +1,21 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.min.css');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Roboto+Mono:wght@400;500&family=Pacifico&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Roboto+Mono:wght@400;500&family=Pacifico&display=swap');
+
+:root {
+  --font-inter: 'Inter', sans-serif;
+  --font-roboto-mono: 'Roboto Mono', monospace;
+  --font-pacifico: 'Pacifico', cursive;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-inter);
+  background: #fff;
+  color: #000;
+}
