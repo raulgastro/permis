@@ -8,10 +8,10 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",        // 👈 à la place de "bundler" (plus compatible avec Next)
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "preserve",                 // 👈 permet d’utiliser JSX dans les fichiers .tsx
     "incremental": true,
     "plugins": [
       {
@@ -19,9 +19,16 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"],
+      "@/*": ["./*"]                   // 👈 retiré la virgule après cette ligne (erreur JSON)
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next.config.mjs", "next.config.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "next.config.mjs",
+    "next.config.js"
+  ],
   "exclude": ["node_modules"]
 }

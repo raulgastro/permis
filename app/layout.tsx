@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Permis 2",
-  description: "Site créé à partir du projet Readdy",
+  title: "Permis Plus",
+  description: "Votre partenaire de confiance pour obtenir tous types de permis de conduire. dans les delais les plus brefs.",
 };
 
 export default function RootLayout({
