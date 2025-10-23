@@ -9,8 +9,8 @@ export default function Hero() {
 
   const vehicleImages = [
     {
-      url: "https://readdy.ai/api/search-image?query=Modern%20luxury%20sedan%20car%20driving%20on%20highway%2C%20clean%20silver%20metallic%20finish%2C%20professional%20automotive%20photography%2C%20dynamic%20angle%2C%20bright%20daylight%2C%20minimal%20background%2C%20high%20quality%2C%20commercial%20style&width=1920&height=1080&seq=vehicle-1&orientation=landscape",
-      alt: "Voiture de tourisme"
+      url: "/bmw.jpeg",
+      alt: "Luxury BMW sedan",
     },
     {
       url: "https://readdy.ai/api/search-image?query=Motorcycle%20rider%20on%20modern%20sport%20bike%2C%20professional%20riding%20gear%2C%20scenic%20mountain%20road%2C%20dynamic%20motion%2C%20bright%20lighting%2C%20adventure%20style%2C%20high%20quality%20photography&width=1920&height=1080&seq=vehicle-2&orientation=landscape",
@@ -25,12 +25,12 @@ export default function Hero() {
       alt: "Transport en commun"
     },
     {
-      url: "https://readdy.ai/api/search-image?query=BMW%20driving%20school%20car%20with%20dual%20controls%20and%20instructor%20signs%2C%20white%20BMW%20sedan%20with%20educational%20branding%2C%20professional%20driving%20education%20vehicle%2C%20clean%20modern%20design%2C%20bright%20lighting%2C%20training%20environment&width=1920&height=1080&seq=vehicle-5&orientation=landscape",
+      url: "https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=2070&auto=format&fit=crop",
       alt: "BMW Auto-école"
     },
     {
-      url: "https://readdy.ai/api/search-image?query=Luxury%20BMW%20sports%20car%20on%20scenic%20road%2C%20metallic%20blue%20BMW%20coupe%2C%20dynamic%20driving%20angle%2C%20premium%20automotive%20photography%2C%20mountain%20background%2C%20bright%20daylight%2C%20high%20performance%20vehicle&width=1920&height=1080&seq=vehicle-6&orientation=landscape",
-      alt: "BMW Sport"
+      url: "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070&auto=format&fit=crop",
+      alt: "moto Sport"
     }
   ];
 

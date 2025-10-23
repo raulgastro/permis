@@ -13,11 +13,51 @@ export default function FormStep4({ data, onPrev }: FormStep4Props) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [acceptConditions, setAcceptConditions] = useState(false);
 
-  const handleSubmit = async () => {
-    if (!acceptConditions) {
-      alert('Veuillez accepter les conditions générales');
-      return;
+ const handleSubmit = async () => {
+  if (!acceptConditions) {
+    alert('Veuillez accepter les conditions générales');
+    return;
+  }
+
+  setIsSubmitting(true);
+
+  try {
+    const formDataToSend = new FormData();
+
+    // Données textuelles
+    formDataToSend.append("permisType", data.permisType);
+    formDataToSend.append("personalInfo", JSON.stringify(data.personalInfo));
+    formDataToSend.append("preferences", JSON.stringify(data.preferences));
+
+    // Fichiers (ex : carte d'identité, justificatif de domicile)
+    if (data.documents) {
+      Object.keys(data.documents).forEach((key) => {
+        if (data.documents[key]) {
+          formDataToSend.append(key, data.documents[key]);
+        }
+      });
     }
+
+    const response = await fetch("/api/send", {
+      method: "POST",
+      body: formDataToSend,
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      setIsSubmitted(true);
+    } else {
+      alert("Erreur lors de l'envoi : " + (result.error || "Inconnue"));
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Erreur réseau. Veuillez réessayer.");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
     setIsSubmitting(true);
 

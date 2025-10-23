@@ -1,21 +1,33 @@
-import type { Metadata } from "next";
 import "./globals.css";
+import { Inter } from "next/font/google";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
-export const metadata: Metadata = {
-  title: "Permis Plus",
-  description: "Votre partenaire de confiance pour obtenir tous types de permis de conduire. dans les delais les plus brefs.",
+const inter = Inter({ subsets: ["latin"] });
+
+export const metadata = {
+  title: "Permis plus",
+  description: "Obtenez votre permis de conduire facilement avec Permis Plus - Votre auto-école de confiance pour tous types de permis.",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="fr" suppressHydrationWarning={true}>
-      <body className="antialiased" style={{ fontFamily: "var(--font-inter)" }}>
+    <html lang="en">
+      <body className={inter.className}>
+        {/* 🟩 Barre de navigation affichée sur toutes les pages */}
+        <Navbar />
+
+        {/* 🟦 Contenu spécifique à chaque page */}
         {children}
+
+        {/* 🟨 Pied de page affiché sur toutes les pages */}
+        <Footer />
       </body>
     </html>
   );
 }
+

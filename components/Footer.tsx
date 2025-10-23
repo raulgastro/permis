@@ -12,7 +12,7 @@ export default function Footer() {
           <div className="md:col-span-2">
             <div className="mb-6 flex items-center space-x-3">
               {/* Logo */}
-              <img src="/footer.png" alt="Logo Permis Plus" className="h-12 w-auto" />
+              <img src="/logo.png" alt="Logo Permis Plus" className="h-12 w-auto" />
               <h3 className="text-2xl font-bold" style={{ fontFamily: 'Pacifico, serif' }}>
                 Permis Plus
               </h3>
