@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -13,84 +12,57 @@ export default function FormStep4({ data, onPrev }: FormStep4Props) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [acceptConditions, setAcceptConditions] = useState(false);
 
- const handleSubmit = async () => {
-  if (!acceptConditions) {
-    alert('Veuillez accepter les conditions générales');
-    return;
-  }
-
-  setIsSubmitting(true);
-
-  try {
-    const formDataToSend = new FormData();
-
-    // Données textuelles
-    formDataToSend.append("permisType", data.permisType);
-    formDataToSend.append("personalInfo", JSON.stringify(data.personalInfo));
-    formDataToSend.append("preferences", JSON.stringify(data.preferences));
-
-    // Fichiers (ex : carte d'identité, justificatif de domicile)
-    if (data.documents) {
-      Object.keys(data.documents).forEach((key) => {
-        if (data.documents[key]) {
-          formDataToSend.append(key, data.documents[key]);
-        }
-      });
+  const handleSubmit = async () => {
+    if (!acceptConditions) {
+      alert('Veuillez accepter les conditions générales');
+      return;
     }
-
-    const response = await fetch("/api/send", {
-      method: "POST",
-      body: formDataToSend,
-    });
-
-    const result = await response.json();
-
-    if (result.success) {
-      setIsSubmitted(true);
-    } else {
-      alert("Erreur lors de l'envoi : " + (result.error || "Inconnue"));
-    }
-  } catch (error) {
-    console.error(error);
-    alert("Erreur réseau. Veuillez réessayer.");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-
 
     setIsSubmitting(true);
 
-    // Simulation d'envoi de formulaire
-    const formData = new FormData();
-    formData.append('permisType', data.permisType);
-    formData.append('nom', data.personalInfo?.nom || '');
-    formData.append('prenom', data.personalInfo?.prenom || '');
-    formData.append('dateNaissance', data.personalInfo?.dateNaissance || '');
-    formData.append('lieuNaissance', data.personalInfo?.lieuNaissance || '');
-    formData.append('nationalite', data.personalInfo?.nationalite || '');
-    formData.append('adresse', data.personalInfo?.adresse || '');
-    formData.append('codePostal', data.personalInfo?.codePostal || '');
-    formData.append('ville', data.personalInfo?.ville || '');
-    formData.append('telephone', data.personalInfo?.telephone || '');
-    formData.append('email', data.personalInfo?.email || '');
-    formData.append('autoEcole', data.preferences?.autoEcole || '');
-    formData.append('modeFormation', data.preferences?.modeFormation || '');
-    formData.append('commentaires', data.preferences?.commentaires || '');
-
     try {
+      const formDataToSend = new FormData();
+
+      // Données textuelles
+      formDataToSend.append("permisType", data.permisType);
+      formDataToSend.append("personalInfo", JSON.stringify(data.personalInfo));
+      formDataToSend.append("preferences", JSON.stringify(data.preferences));
+
+      // Fichiers (ex : carte d'identité, justificatif de domicile)
+      if (data.documents) {
+        Object.keys(data.documents).forEach((key) => {
+          if (data.documents[key]) {
+            formDataToSend.append(key, data.documents[key]);
+          }
+        });
+      }
+
       // Simulation d'un délai d'envoi
       await new Promise(resolve => setTimeout(resolve, 2000));
-      setIsSubmitted(true);
+
+      // Envoi au serveur
+      const response = await fetch("/api/send", {
+        method: "POST",
+        body: formDataToSend,
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setIsSubmitted(true);
+      } else {
+        alert("Erreur lors de l'envoi : " + (result.error || "Inconnue"));
+      }
     } catch (error) {
-      alert('Erreur lors de l\'envoi. Veuillez réessayer.');
+      console.error(error);
+      alert("Erreur réseau. Veuillez réessayer.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const getPermisTypeLabel = (type: string) => {
-    const types: {[key: string]: string} = {
+    const types: { [key: string]: string } = {
       'B': 'Permis B - Véhicules légers',
       'A': 'Permis A - Motocycles',
       'A2': 'Permis A2 - Motocycles 35kW',
