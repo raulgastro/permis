@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -11,7 +10,18 @@ export default function FormSection() {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     permisType: '',
-    personalInfo: {},
+    personalInfo: {
+      nom: '',
+      prenom: '',
+      dateNaissance: '',
+      lieuNaissance: '',
+      nationalite: '',
+      adresse: '',
+      codePostal: '',
+      ville: '',
+      telephone: '',
+      email: ''
+    },
     documents: {},
     preferences: {}
   });
@@ -26,8 +36,25 @@ export default function FormSection() {
   const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, 4));
   const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
 
+  // --- Merge pour ne pas écraser les données existantes ---
   const updateFormData = (stepData: any) => {
-    setFormData(prev => ({ ...prev, ...stepData }));
+    setFormData(prev => ({
+      ...prev,
+      ...stepData,
+      personalInfo: {
+        ...prev.personalInfo,
+        ...(stepData.personalInfo || {})
+      },
+      preferences: {
+        ...prev.preferences,
+        ...(stepData.preferences || {})
+      },
+      documents: {
+        ...prev.documents,
+        ...(stepData.documents || {})
+      }
+    }));
+    console.log("FormData mis à jour :", stepData);  // Log des données mises à jour
   };
 
   return (

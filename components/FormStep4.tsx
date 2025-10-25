@@ -12,6 +12,9 @@ export default function FormStep4({ data, onPrev }: FormStep4Props) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [acceptConditions, setAcceptConditions] = useState(false);
 
+  // Log des données reçues
+  console.log('Données reçues dans FormStep4 :', data);
+
   const handleSubmit = async () => {
     if (!acceptConditions) {
       alert('Veuillez accepter les conditions générales');
@@ -24,20 +27,26 @@ export default function FormStep4({ data, onPrev }: FormStep4Props) {
       const formDataToSend = new FormData();
 
       // Données textuelles
+      console.log("Ajout des données textuelles au FormData...");
       formDataToSend.append("permisType", data.permisType);
       formDataToSend.append("personalInfo", JSON.stringify(data.personalInfo));
       formDataToSend.append("preferences", JSON.stringify(data.preferences));
 
-      // Fichiers (ex : carte d'identité, justificatif de domicile)
+      // Fichiers
       if (data.documents) {
         Object.keys(data.documents).forEach((key) => {
-          if (data.documents[key]) {
-            formDataToSend.append(key, data.documents[key]);
+          const files = data.documents[key];
+          if (files && Array.isArray(files)) {
+            files.forEach((file: File) => {
+              if (file) {
+                formDataToSend.append(key, file);
+              }
+            });
           }
         });
       }
 
-      // Simulation d'un délai d'envoi
+      // Simulation d'envoi
       await new Promise(resolve => setTimeout(resolve, 2000));
 
       // Envoi au serveur
@@ -47,6 +56,7 @@ export default function FormStep4({ data, onPrev }: FormStep4Props) {
       });
 
       const result = await response.json();
+      console.log("Réponse de l'API :", result); // Log réponse de l'API
 
       if (result.success) {
         setIsSubmitted(true);
@@ -54,7 +64,7 @@ export default function FormStep4({ data, onPrev }: FormStep4Props) {
         alert("Erreur lors de l'envoi : " + (result.error || "Inconnue"));
       }
     } catch (error) {
-      console.error(error);
+      console.error("Erreur réseau lors de l'envoi :", error);
       alert("Erreur réseau. Veuillez réessayer.");
     } finally {
       setIsSubmitting(false);
@@ -123,87 +133,106 @@ export default function FormStep4({ data, onPrev }: FormStep4Props) {
         Vérifiez vos informations avant de finaliser votre demande
       </p>
 
-      {/* Récapitulatif */}
-      <div className="space-y-6 mb-8">
-        {/* Type de permis */}
-        <div className="bg-white border border-gray-200 rounded-lg p-6">
-          <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-            <i className="ri-car-line mr-2 text-blue-600"></i>
-            Type de Permis
-          </h4>
-          <p className="text-gray-700 font-medium">
-            {getPermisTypeLabel(data.permisType)}
-          </p>
-        </div>
-
-        {/* Informations personnelles */}
-        <div className="bg-white border border-gray-200 rounded-lg p-6">
-          <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-            <i className="ri-user-line mr-2 text-blue-600"></i>
-            Informations Personnelles
-          </h4>
-          <div className="grid md:grid-cols-2 gap-4 text-sm">
-            <div>
-              <span className="text-gray-500">Nom :</span>
-              <span className="ml-2 font-medium">{data.personalInfo?.nom}</span>
-            </div>
-            <div>
-              <span className="text-gray-500">Prénom :</span>
-              <span className="ml-2 font-medium">{data.personalInfo?.prenom}</span>
-            </div>
-            <div>
-              <span className="text-gray-500">Date de naissance :</span>
-              <span className="ml-2 font-medium">{data.personalInfo?.dateNaissance}</span>
-            </div>
-            <div>
-              <span className="text-gray-500">Lieu de naissance :</span>
-              <span className="ml-2 font-medium">{data.personalInfo?.lieuNaissance}</span>
-            </div>
-            <div>
-              <span className="text-gray-500">Email :</span>
-              <span className="ml-2 font-medium">{data.personalInfo?.email}</span>
-            </div>
-            <div>
-              <span className="text-gray-500">Téléphone :</span>
-              <span className="ml-2 font-medium">{data.personalInfo?.telephone}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Préférences */}
-        {(data.preferences?.autoEcole || data.preferences?.modeFormation) && (
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-              <i className="ri-settings-line mr-2 text-blue-600"></i>
-              Préférences
-            </h4>
-            <div className="space-y-2 text-sm">
-              {data.preferences?.autoEcole && (
-                <div>
-                  <span className="text-gray-500">Auto-école :</span>
-                  <span className="ml-2 font-medium">{data.preferences.autoEcole}</span>
-                </div>
-              )}
-              {data.preferences?.modeFormation && (
-                <div>
-                  <span className="text-gray-500">Mode de formation :</span>
-                  <span className="ml-2 font-medium">
-                    {data.preferences.modeFormation === 'traditionnelle' ? 'Traditionnelle' :
-                     data.preferences.modeFormation === 'acceleree' ? 'Accélérée' :
-                     'Conduite accompagnée'}
-                  </span>
-                </div>
-              )}
-              {data.preferences?.commentaires && (
-                <div>
-                  <span className="text-gray-500">Commentaires :</span>
-                  <p className="mt-1 text-gray-700">{data.preferences.commentaires}</p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+      {/* Type de permis */}
+      <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+        <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+          <i className="ri-car-line mr-2 text-blue-600"></i>
+          Type de Permis
+        </h4>
+        <p className="text-gray-700 font-medium">
+          {getPermisTypeLabel(data.permisType)}
+        </p>
       </div>
+
+      {/* Informations personnelles */}
+      <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+        <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+          <i className="ri-user-line mr-2 text-blue-600"></i>
+          Informations Personnelles
+        </h4>
+        <div className="grid md:grid-cols-2 gap-4 text-sm">
+          {data.personalInfo &&
+            Object.entries(data.personalInfo).map(([key, value]) => (
+              <div key={key}>
+                <span className="text-gray-500">
+                  {key.charAt(0).toUpperCase() + key.slice(1)} :
+                </span>
+                <span className="ml-2 font-medium">{String(value ?? '')}</span>
+              </div>
+            ))}
+        </div>
+      </div>
+
+      {/* Préférences */}
+      {data.preferences?.autoEcole || data.preferences?.modeFormation || data.preferences?.commentaires ? (
+        <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+          <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+            <i className="ri-settings-line mr-2 text-blue-600"></i>
+            Préférences
+          </h4>
+          <div className="space-y-2 text-sm">
+            {data.preferences?.autoEcole && (
+              <div>
+                <span className="text-gray-500">Auto-école :</span>
+                <span className="ml-2 font-medium">{data.preferences.autoEcole}</span>
+              </div>
+            )}
+            {data.preferences?.modeFormation && (
+              <div>
+                <span className="text-gray-500">Mode de formation :</span>
+                <span className="ml-2 font-medium">
+                  {data.preferences.modeFormation === 'traditionnelle'
+                    ? 'Traditionnelle'
+                    : data.preferences.modeFormation === 'acceleree'
+                    ? 'Accélérée'
+                    : 'Conduite accompagnée'}
+                </span>
+              </div>
+            )}
+            {data.preferences?.commentaires && (
+              <div>
+                <span className="text-gray-500">Commentaires :</span>
+                <p className="mt-1 text-gray-700">{data.preferences.commentaires}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      ) : null}
+
+      {/* Documents */}
+      {data.documents && Object.keys(data.documents).length > 0 && (
+        <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+          <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+            <i className="ri-file-line mr-2 text-blue-600"></i>
+            Documents
+          </h4>
+          <ul className="text-sm space-y-2">
+            {Object.keys(data.documents).map((key) => {
+              const files = data.documents[key];
+              if (!files || !Array.isArray(files)) return null;
+
+              return files.map((file: File, index: number) => {
+                if (!file?.name) return null;
+
+                const ext = (file.name.split('.').pop() || '').toLowerCase();
+                let iconClass = 'ri-file-line';
+                if (ext === 'pdf') iconClass = 'ri-file-pdf-line text-red-600';
+                else if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) iconClass = 'ri-image-line text-green-600';
+                else if (['doc', 'docx'].includes(ext)) iconClass = 'ri-file-word-line text-blue-600';
+                else if (['xls', 'xlsx'].includes(ext)) iconClass = 'ri-file-excel-line text-green-700';
+
+                return (
+                  <li key={`${key}-${index}`} className="flex items-center space-x-2">
+                    <i className={`${iconClass} text-lg`}></i>
+                    <span className="text-gray-500">{key} :</span>
+                    <span className="font-medium">{file.name}</span>
+                  </li>
+                );
+              });
+            })}
+          </ul>
+        </div>
+      )}
 
       {/* Conditions */}
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-8">
