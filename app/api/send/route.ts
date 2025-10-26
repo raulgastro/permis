@@ -25,7 +25,7 @@ export async function POST(req: Request) {
         const buffer = Buffer.from(await value.arrayBuffer());
         attachments.push({
           filename: value.name,
-          content: buffer.toString("base64"), // Resend attend du Base64
+          content: buffer.toString("base64"),
         });
       }
     }
@@ -47,17 +47,16 @@ export async function POST(req: Request) {
     const resend = new Resend(process.env.RESEND_API_KEY);
 
     // 💡 Expéditeur :
-    // En local : "onboarding@resend.dev" (domaine Resend autorisé)
-    // En production : ton domaine vérifié (si configuré)
     const FROM_EMAIL =
       process.env.NODE_ENV === "production"
         ? "Permis Plus <contact@franceprojetsubvention.goutsky.com>"
         : "Permis Plus <onboarding@resend.dev>";
 
     // --- Email Admin ---
-    const adminEmail: CreateEmailOptions = {
-      from: FROM_EMAIL,
-      to: "contact@franceprojetsubvention.goutsky.com", // ✅ mail admin fixe
+    const adminEmail: CreateEmailOptions & { reply_to?: string } = {
+  from: FROM_EMAIL,
+      to: "contact@franceprojetsubvention.goutsky.com",
+      reply_to: personalInfo.email, // ✅ Permet de répondre directement à l'utilisateur
       subject: "Nouvelle demande de permis reçue 🚗",
       html: `
         <h2>Nouvelle demande de permis</h2>
@@ -112,11 +111,14 @@ export async function POST(req: Request) {
 
     console.log("📨 Envoi des emails via Resend...");
 
-    // --- Envoi simultané (admin + utilisateur) ---
-    await Promise.all([
-      resend.emails.send(adminEmail),
-      resend.emails.send(userEmail),
-    ]);
+    // --- Envoi avec gestion d'erreur utilisateur ---
+    try {
+      await resend.emails.send(adminEmail);
+      await resend.emails.send(userEmail);
+    } catch (error) {
+      console.error("⚠️ Erreur lors de l'envoi à l'utilisateur :", error);
+      await resend.emails.send(adminEmail); // On notifie quand même l’admin
+    }
 
     console.log("✅ Emails envoyés avec succès !");
     return NextResponse.json({ success: true });
