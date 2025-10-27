@@ -1,7 +1,46 @@
-
 'use client';
 
+import { useState } from 'react';
+
 export default function FinancingForm() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState<null | 'success' | 'error'>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setStatus(null);
+
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+
+    // Récupération des checkbox (type de véhicule)
+    const typeVehicules = Array.from(
+      document.querySelectorAll('input[name="type-vehicule"]:checked')
+    ).map((el) => (el as HTMLInputElement).value);
+    (data as any)['type-vehicule'] = typeVehicules.join(', ');
+
+    try {
+      const res = await fetch('/api/financement', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      if (res.ok) {
+        setStatus('success');
+        (e.target as HTMLFormElement).reset();
+      } else {
+        setStatus('error');
+      }
+    } catch (error) {
+      console.error('Erreur:', error);
+      setStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <section id="demande-financement" className="py-16 bg-white">
       <div className="max-w-4xl mx-auto px-6">
@@ -15,7 +54,7 @@ export default function FinancingForm() {
         </div>
 
         <div className="bg-gray-50 rounded-2xl p-8">
-          <form id="financing-form" className="space-y-6">
+          <form id="financing-form" className="space-y-6" onSubmit={handleSubmit}>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -206,10 +245,25 @@ export default function FinancingForm() {
             <div className="text-center">
               <button
                 type="submit"
-                className="bg-green-600 hover:bg-green-700 text-white px-12 py-4 rounded-lg text-lg font-bold transition-colors cursor-pointer whitespace-nowrap"
+                disabled={isSubmitting}
+                className={`bg-green-600 hover:bg-green-700 text-white px-12 py-4 rounded-lg text-lg font-bold transition-colors cursor-pointer whitespace-nowrap ${
+                  isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
+                }`}
               >
-                Envoyer Ma Demande
+                {isSubmitting ? 'Envoi en cours...' : 'Envoyer Ma Demande'}
               </button>
+
+              {status === 'success' && (
+                <p className="text-green-600 font-semibold mt-4">
+                  ✅ Votre demande a bien été envoyée !
+                </p>
+              )}
+              {status === 'error' && (
+                <p className="text-red-600 font-semibold mt-4">
+                  ❌ Une erreur est survenue, veuillez réessayer.
+                </p>
+              )}
+
               <div className="text-sm text-gray-500 mt-4">
                 Réponse de principe sous 24h • Sans engagement • Gratuit
               </div>

@@ -96,6 +96,11 @@ export async function POST(req: Request) {
             <div style="background: #1e40af; padding: 20px; text-align: center;">
               <h1 style="color: white; margin: 10px 0 0;">Permis Plus</h1>
             </div>
+            <!-- En-tête avec logo -->
+            <div style="background: #1e40af; padding: 30px; text-align: center;">
+              <img src="https://https://permis.onrender.com//logo.png" alt="Logo AutoFinancement" style="max-width: 150px; margin-bottom: 10px;" />
+              <h1 style="color: white; margin: 0;">AutoFinancement</h1>
+            </div>
             <div style="padding: 30px;">
               <h2 style="color: #1e40af;">Bonjour ${personalInfo.prenom} ${personalInfo.nom},</h2>
               <p>Nous accusons bonne réception de votre demande concernant votre dossier de <strong>${getPermisTypeLabel(permisType)}</strong>.</p>
