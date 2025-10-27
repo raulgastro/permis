@@ -76,7 +76,7 @@ export async function POST(req: Request) {
             
             <!-- En-tête avec logo -->
             <div style="background: #047857; padding: 30px; text-align: center;">
-              <img src="https://permis.onrender.com//logo.png" alt="Logo AutoFinancement" style="max-width: 150px; margin-bottom: 10px;" />
+              <img src="https://permis.onrender.com/logo.png" alt="Logo AutoFinancement" style="max-width: 150px; margin-bottom: 10px;" />
               <h1 style="color: white; margin: 0;">AutoFinancement</h1>
             </div>
 
