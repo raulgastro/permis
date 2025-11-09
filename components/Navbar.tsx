@@ -15,10 +15,10 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Image
-              src="/logo.png"
+              src="/favicon.png"
               alt="Permis Plus Logo"
-              width={40}
-              height={40}
+              width={170}
+              height={50}
               className="rounded-full"
             />
             <span

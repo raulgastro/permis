@@ -8,6 +8,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
   title: "Permis plus",
   description: "Obtenez votre permis de conduire facilement avec Permis Plus - Votre auto-école de confiance pour tous types de permis.",
+  icons: {
+    icon: "/favicon.png",
+    },
 };
 
 export default function RootLayout({
